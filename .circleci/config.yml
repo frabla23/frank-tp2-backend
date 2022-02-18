@@ -9,7 +9,8 @@ jobs:
       - run: npm install
       - run: npm run test
   integrateFrontend:
-    machine: true
+    docker:
+      - image: cimg/node:17.4.0
     steps:
      - run: git clone https://github.com/frabla23/frank-tp2-backend.git
      - run: git clone https://github.com/frabla23/frank-tp2-frontend.git
