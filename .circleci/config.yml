@@ -1,0 +1,34 @@
+version: "2.1"
+orbs:
+  eb: circleci/aws-elastic-beanstalk@2.0.1
+  node: circleci/node@5.0.0
+workflows:
+  elastic-beanstalk-workflow:
+    jobs:
+      checkoutAndTest:
+        docker:
+          - image: cimg/node:17.4.0
+        steps:
+          - checkout
+          - node/test
+      integrateFrontend:
+        steps:
+         - run: git clone https://github.com/frabla23/frank-tp2-backend.git
+         - run: git clone https://github.com/frabla23/frank-tp2-frontend.git
+         - run: cd frank-tp2-frontend && npm i
+         - run: cd frank-tp2-frontend && npm run build
+         - run: cd frank-tp2-backend && mkdir public
+         - run: cp -rT frank-tp2-frontend/build frank-tp2-backend/public
+         - persist_to_workspace:
+                   root: .
+                   paths:
+                     - frank-tp2-backend
+        requires:
+          - checkoutAndTest
+      deploy:
+        steps:
+         - attach_workspace:
+                   at: .
+         - run: ls -R1
+          requires:
+            - integrationFrontend
