@@ -21,6 +21,7 @@ jobs:
                paths:
                  - frank-tp2-backend
   deploy:
+    machine: true
     steps:
      - attach_workspace:
                at: .
